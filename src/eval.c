@@ -267,6 +267,18 @@ object_t *eval_eq(object_t *expr, object_t **env) {
   return &t;
 }
 
+object_t *eval_source(object_t *expr, object_t **env) {
+  object_t *proc = eval(car(cdr(expr)), env);
+  if (true(procedure(proc))) {
+    object_t *list = (object_t*) proc->data.ptr;
+    object_t *params = car(cdr(list));
+    object_t *body = car(cdr(cdr(list)));
+    return cons(make_symbol("lambda"), cons(params, cons(body, NULL)));
+  }
+
+  return make_error("not a procedure");
+}
+
 #define def(sym,fun) \
   define(env, make_symbol(sym), make_primitive(fun));
 
@@ -279,6 +291,7 @@ object_t *init() {
   def("quote", eval_quote)
   def("define", eval_define)
   def("error", eval_error)
+  def("source", eval_source)
 
   def("number?", numberp)
   def("boolean?", booleanp)
