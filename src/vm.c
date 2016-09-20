@@ -44,6 +44,7 @@ static void mark(object_t *o) {
       mark(car(o));
       mark(cdr(o));
       break;
+    case ERROR:
     case PROCEDURE:
       mark(o->data.ptr);
       break;

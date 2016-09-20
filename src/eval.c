@@ -50,22 +50,6 @@ object_t *eval_plus(object_t *expr, object_t **env) {
   return plus(op, eval_plus(cdr(expr), env));
 }
 
-/*
-object_t *extend(object_t *args, object_t *params, object_t **env, object_t *closure, char trace) {
-  if (args == NULL || params == NULL) return closure;
-  object_t *sym = car(args);
-  object_t *val = eval(car(params), env);
-
-  if (trace) {
-    print(sym);
-    printf(" => ");
-    print(val);
-    printf("\n");
-  }
-
-  return define(extend(cdr(args), cdr(params), env, closure, trace), sym, val);
-}*/
-
 object_t *eval_args(object_t *frame, object_t *params, object_t *args, object_t **env) {
   if (args == NULL || params == NULL) return frame;
 
@@ -195,6 +179,16 @@ object_t *eval_trace(object_t *expr, object_t **env) {
   return trace(op);
 }
 
+object_t *untrace(object_t *op) {
+  op->trace = 0;
+  return op;
+}
+
+object_t *eval_untrace(object_t *expr, object_t **env) {
+  object_t *op = eval(car(cdr(expr)), env);
+  return untrace(op);
+}
+
 object_t *eval_eval(object_t *expr, object_t **env) {
   return eval(eval(car(cdr(expr)), env), env);
 }
@@ -237,6 +231,42 @@ object_t *eval_print(object_t *expr, object_t **env) {
   return o;
 }
 
+object_t *eq(object_t *a, object_t *b) {
+  if (a == b) return &t;
+  if (a == NULL) return &f;
+  if (a->type != b->type) return &t;
+
+  switch(a->type) {
+    case FIXNUM:
+      return (a->data.fix == b->data.fix) ? &t : &f;
+    case CHARACTER:
+      return (a->data.c == b->data.c) ? &t : &f;
+    case SYMBOL:
+    case STRING:
+    case ERROR:
+      return symbol_eq(a, b);
+    case PAIR:
+      return (false(eq(car(a), car(b)))) ? &f : eq(cdr(a), cdr(b));
+  }
+
+  return &f;
+}
+
+object_t *eval_eq(object_t *expr, object_t **env) {
+  if (expr == NULL) return NULL;
+
+  object_t *a = eval(car(cdr(expr)), env);
+  object_t *ls = cdr(cdr(expr));
+
+  while (ls != NULL) {
+    object_t *b = eval(car(ls), env);
+    if (false(eq(a, b))) return &f;
+    ls = cdr(ls);
+  }
+
+  return &t;
+}
+
 #define def(sym,fun) \
   define(env, make_symbol(sym), make_primitive(fun));
 
@@ -244,6 +274,7 @@ object_t *init() {
   object_t *env = make_frame(NULL);
 
   def("+", eval_plus)
+  def("=", eval_eq)
   def("if", eval_if)
   def("quote", eval_quote)
   def("define", eval_define)
@@ -261,6 +292,7 @@ object_t *init() {
   def("eval", eval_eval)
   def("lambda", eval_lambda)
   def("trace", eval_trace)
+  def("untrace", eval_untrace)
 
   def("cons", eval_cons)
   def("car", eval_car)
