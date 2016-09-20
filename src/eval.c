@@ -41,7 +41,6 @@ object_t *plus(object_t *a, object_t *b) {
   return make_fixnum_int(a->data.fix + b->data.fix);
 }
 
-
 // (+ 1 2 3)
 object_t *eval_plus(object_t *expr, object_t **env) {
   if (expr == NULL) return NULL;
@@ -233,7 +232,7 @@ object_t *eval_print(object_t *expr, object_t **env) {
 
 object_t *eq(object_t *a, object_t *b) {
   if (a == b) return &t;
-  if (a == NULL) return &f;
+  if (a == NULL || b == NULL) return &f;
   if (a->type != b->type) return &t;
 
   switch(a->type) {
@@ -269,6 +268,7 @@ object_t *eval_eq(object_t *expr, object_t **env) {
 
 object_t *eval_source(object_t *expr, object_t **env) {
   object_t *proc = eval(car(cdr(expr)), env);
+
   if (true(procedure(proc))) {
     object_t *list = (object_t*) proc->data.ptr;
     object_t *params = car(cdr(list));
@@ -277,6 +277,11 @@ object_t *eval_source(object_t *expr, object_t **env) {
   }
 
   return make_error("not a procedure");
+}
+
+// (apply fn op1 ...)
+object_t *eval_apply(object_t *expr, object_t **env) {
+  return eval_pair(cdr(expr), env);
 }
 
 #define def(sym,fun) \
@@ -292,6 +297,7 @@ object_t *init() {
   def("define", eval_define)
   def("error", eval_error)
   def("source", eval_source)
+  def("apply", eval_apply)
 
   def("number?", numberp)
   def("boolean?", booleanp)
