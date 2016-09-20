@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -64,8 +65,11 @@ int main (int argc, char** argv) {
 
   while ((ts = prompt(">> ")) != NULL) {
     while (token_stream_peek(ts) != NULL) {
-      print(eval(reader(ts), vm_root_env(vm)));
-      printf("\n");
+      object_t *value = eval(reader(ts), vm_root_env(vm));
+      if (isatty(fileno(stdin))) {
+        print(value);
+        printf("\n");
+      }
     }
     free_token_strem(ts);
     vm_gc(vm);
