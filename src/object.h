@@ -25,10 +25,8 @@ typedef enum {
   ENDOFINPUT
 } type_t;
 
-
-typedef struct object_t *(*primitive)(struct object_t *expr, struct object_t **env);
-
 typedef struct object_t object_t;
+typedef struct object_t *(*primitive)(struct object_t *expr, struct object_t **env);
 
 struct object_t {
   char type;
@@ -39,10 +37,9 @@ struct object_t {
     float flo;
     primitive fn;
   } data;
-  char trace;
+  unsigned char trace;
   unsigned char marked;
 };
-
 
 typedef struct {
   object_t *car;
@@ -57,8 +54,8 @@ typedef struct {
 extern object_t t;
 extern object_t f;
 
-#define true(o) (o == &t)
-#define false(o) (o == &f)
+#define true(o) ((o) == &t)
+#define false(o) ((o) == &f)
 
 object_t *make(type_t type);
 

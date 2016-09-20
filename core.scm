@@ -39,3 +39,21 @@
 
 (print (map inc (concat '(1 2 3 4 5) '(6 7 8 9 10))))
 
+(define count (lambda (ls)
+  (begin
+    (define count-iter (lambda (ls n)
+      (if (null? ls)
+        n 
+        (count-iter (cdr ls) (inc n)))))
+    (count-iter ls 0))))
+
+(define zero? (lambda (n) (= n 0)))
+
+(define range (lambda (n)
+  (begin
+    (define range-iter (lambda (ls i)
+      (if (= i n)
+        ls
+        (range-iter (cons i ls) (inc i)))))
+    (reverse (range-iter '() 0)))))
+

@@ -58,10 +58,8 @@ static void print_object(object_t *o) {
         printf(__blue("%s"), get_str(o));
         break;
       case PROCEDURE:
-        printf(__purple("#<PROCEDURE>"));
-        break;
       case PRIMITIVE:
-        printf(__purple("#<PROCEDURE>"));
+        printf(__purple("#<PROCEDURE@%p>"), o);
         break;
       case ERROR:
         printf(__red("%s"), get_str(o));
