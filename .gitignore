@@ -1,0 +1,6 @@
+obj/
+.DS_Store
+scm
+lex.yy.c
+*.dep
+tags
