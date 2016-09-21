@@ -20,6 +20,7 @@ typedef enum {
   QUOTE,
   PRIMITIVE,
   PROCEDURE,
+  MACRO,
   IGNORE,
   ERROR,
   ENDOFINPUT

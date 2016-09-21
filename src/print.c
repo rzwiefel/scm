@@ -58,11 +58,16 @@ static void print_object(object_t *o) {
         printf(__blue("%s"), get_str(o));
         break;
       case PROCEDURE:
-      case PRIMITIVE:
         printf(__purple("#<PROCEDURE@%p>"), o);
         break;
+      case PRIMITIVE:
+        printf(__purple("#<PRIMITIVE@%p>"), o);
+        break;
+      case MACRO:
+        printf(__purple("#<MACRO@%p>"), o);
+        break;
       case ERROR:
-        printf(__red("%s"), get_str(o));
+        printf(__red("#<ERROR:%s>"), get_str(o));
         break;
       default:
         printf("cannot write unknown type");

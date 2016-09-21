@@ -4,6 +4,8 @@
 #include "eval.h"
 #include "print.h"
 
+typedef unsigned char bool_t;
+
 object_t *_if(object_t *predicate, object_t *consequent, object_t *alternative, object_t **env) {
   if (true(error(predicate))) return predicate;
 
@@ -49,22 +51,22 @@ object_t *eval_plus(object_t *expr, object_t **env) {
   return plus(op, eval_plus(cdr(expr), env));
 }
 
-object_t *eval_args(object_t *frame, object_t *params, object_t *args, object_t **env) {
+object_t *eval_args(object_t *frame, object_t *params, object_t *args, bool_t macro, object_t **env) {
   if (args == NULL || params == NULL) return frame;
 
   object_t *sym = car(params);
-  object_t *val = eval(car(args), env);
+  object_t *val = macro ? car(args) : eval(car(args), env);
 
-  return define(eval_args(frame, cdr(params), cdr(args), env), sym, val);
+  return define(eval_args(frame, cdr(params), cdr(args), macro, env), sym, val);
 }
 
-object_t *eval_procedure(object_t *procedure, object_t *args, object_t **env) {
+object_t *eval_procedure(object_t *procedure, object_t *args, bool_t macro, object_t **env) {
   object_t *list = (object_t*) procedure->data.ptr;
 
   object_t *parent = car(list); // captured environment
   object_t *frame = make_frame(parent);
   object_t *params = car(cdr(list));
-  object_t *extended_env = eval_args(frame, params, args, env);
+  object_t *extended_env = eval_args(frame, params, args, macro, env);
   object_t *body = car(cdr(cdr(list)));
 
   return eval(body, &extended_env);
@@ -86,7 +88,15 @@ object_t *eval_pair(object_t *expr, object_t **env) {
   if (procedure->type == PRIMITIVE) {
     ret = procedure->data.fn(expr, env);
   } else if (procedure->type == PROCEDURE) {
-    ret = eval_procedure(procedure, cdr(expr), env);
+    ret = eval_procedure(procedure, cdr(expr), 0, env);
+  } else if (procedure->type == MACRO) {
+    ret = eval_procedure(procedure, cdr(expr), 1, env);
+    if (procedure->trace == 1) {
+      printf("expand: ");
+      print(ret);
+      printf("\n");
+    }
+    ret = eval(ret, env);
   } else if (procedure->type == ERROR) {
     return procedure;
   } else {
@@ -284,6 +294,17 @@ object_t *eval_apply(object_t *expr, object_t **env) {
   return eval_pair(cdr(expr), env);
 }
 
+object_t *eval_macro(object_t *expr, object_t **env) {
+  object_t *proc = eval(car(cdr(expr)), env);
+
+  if (true(procedure(proc))) {
+    proc->type = MACRO;
+    return proc;
+  }
+
+  return make_error("not a procedure");
+}
+
 #define def(sym,fun) \
   define(env, make_symbol(sym), make_primitive(fun));
 
@@ -298,6 +319,7 @@ object_t *init() {
   def("error", eval_error)
   def("source", eval_source)
   def("apply", eval_apply)
+  def("macro", eval_macro)
 
   def("number?", numberp)
   def("boolean?", booleanp)
