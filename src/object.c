@@ -128,6 +128,7 @@ void free_object(object_t *o) {
   switch(o->type) {
     case PAIR: free(o->data.ptr); break;
     case SYMBOL:
+    case ERROR:
     case STRING:
                free_str(o->data.ptr); break;
   }
