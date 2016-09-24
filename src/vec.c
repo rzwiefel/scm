@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "vec.h"
 
 #define VEC_INITIAL_CAPACITY 64

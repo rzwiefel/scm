@@ -30,6 +30,8 @@ RBRACE \)
 BOOLEAN #t|#f
 
 %option noyywrap
+%option nounput
+%option noinput
 
 %%
 

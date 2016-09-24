@@ -44,8 +44,8 @@ object_t *read_object(token_t *t) {
     case CHARACTER: return make_char(str);
     case SYMBOL: return make_symbol(str);
     case BOOLEAN: return make_boolean(str);
+    default: return NULL;
   }
-  return NULL;
 }
 
 object_t *reader(token_stream_t *ts) {

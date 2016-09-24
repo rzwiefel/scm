@@ -1,6 +1,6 @@
 BIN=scm
 CC=gcc
-CFLAGS=-std=c99 -g -O2 -Wall -pedantic
+CFLAGS=-std=gnu99 -g -O2 -Wall -pedantic
 LDFLAGS=-lreadline
 ODIR=obj
 SDIR=src

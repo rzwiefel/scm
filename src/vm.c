@@ -1,4 +1,3 @@
-#include "object.h"
 #include "vm.h"
 
 typedef struct alloc_t alloc_t;
@@ -10,7 +9,7 @@ struct alloc_t {
 
 struct vm_t {
   alloc_t *root_alloc;
-  void *root_env;
+  object_t *root_env;
 };
 
 static alloc_t *make_alloc(size_t n) {
@@ -18,13 +17,6 @@ static alloc_t *make_alloc(size_t n) {
   alloc->o = (object_t*) malloc(n);
   alloc->next = NULL;
   return alloc;
-}
-
-static void free_alloc(alloc_t *alloc) {
-  if (alloc != NULL) {
-    free_object(alloc->o);
-    free(alloc);
-  }
 }
 
 vm_t *make_vm() {
@@ -85,11 +77,11 @@ void free_vm(vm_t *vm) {
   }
 }
 
-void **vm_root_env(vm_t *vm) {
+object_t **vm_root_env(vm_t *vm) {
   return &vm->root_env;
 }
 
-void vm_set_root_env(vm_t *vm, void *env) {
+void vm_set_root_env(vm_t *vm, object_t *env) {
   vm->root_env = env;
 }
 
