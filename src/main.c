@@ -32,9 +32,15 @@ char *concat(char *a, char *b) {
 
 token_stream_t *prompt_validate(char *str, char *history, token_stream_t *prev) {
 
-  char *buff = readline(str);
+  char *buff = NULL;
 
-  if (buff == NULL) return NULL;
+  if (isatty(STDIN_FILENO)) {
+    buff = readline(str);
+    if (buff == NULL) return NULL;
+  } else {
+    buff = (char*) malloc(1024);
+    if (fgets(buff, 1024, stdin) == NULL) return NULL;
+  }
 
   token_stream_t *ts = make_token_stream(prev, buff);
 
@@ -66,7 +72,7 @@ int main (int argc, char** argv) {
   while ((ts = prompt(">> ")) != NULL) {
     while (token_stream_peek(ts) != NULL) {
       object_t *value = eval(reader(ts), vm_root_env(vm));
-      if (isatty(fileno(stdin))) {
+      if (isatty(STDIN_FILENO)) {
         print(value);
         printf("\n");
       }
