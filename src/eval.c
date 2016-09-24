@@ -340,7 +340,7 @@ object_t *init() {
   def("cdr", eval_cdr)
   def("begin", eval_begin)
 
-  def("print", eval_print)
+  def("write", eval_print)
   def("env", eval_env)
 
   return env;
