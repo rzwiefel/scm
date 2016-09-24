@@ -1,6 +1,6 @@
 obj/
 .DS_Store
-scm
+scm*
 lex.yy.c
 *.dep
 tags
