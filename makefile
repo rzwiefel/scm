@@ -31,13 +31,11 @@ $(ODIR):
 # clean up
 clean:
 	rm -rf $(ODIR)/*.o $(BIN) $(SDIR)/lex.yy.c
-	$(MAKE) -sC test clean
 
 # code navigation tags
 tags: $(addprefix $(SDIR)/, $(SOURCES))
 	ctags -R
 
 # build and run tests
-test: $(OBJS)
-	$(MAKE) -sC test
-	test/runner
+test: $(BIN)
+	./test/runner.sh ./$(BIN) ./test/suite
