@@ -173,7 +173,7 @@ void set_cdr(object_t *pair, object_t *cdr) {
 
 object_t *str_to_error(string_t *str) {
   object_t *o = make(ERROR);
-  o->data.ptr = str;
+  o->data.ptr = make_str(str->str);
   return o;
 }
 
