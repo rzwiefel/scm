@@ -6,7 +6,7 @@ ODIR=obj
 SDIR=src
 
 # find all source files
-SOURCES=$(shell cd $(SDIR) && ls *.c | grep -v lexer.c) lexer.c
+SOURCES=$(shell cd $(SDIR) && ls *.c | egrep -v "lexer.c|parser.c") lexer.c parser.c
 OBJS=$(addprefix $(ODIR)/, $(SOURCES:.c=.o))
 
 .PHONY: clean test
@@ -18,16 +18,16 @@ makefile.dep: $(addprefix $(SDIR)/, $(SOURCES))
 
 # build interpreter
 $(BIN): $(ODIR) $(OBJS)
-	$(CC) $(OBJS) -o $(BIN)  $(LDFLAGS)
+	$(CC) $(OBJS) -o $(BIN) $(LDFLAGS)
 
 # build object files from sources
 $(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(SDIR)/lexer.%: $(SDIR)/scheme.l
+$(SDIR)/lexer.o: $(SDIR)/lexer.l
 	flex --header-file=$(SDIR)/lexer.h --outfile=$(SDIR)/lexer.c $<
 
-$(SDIR)/parser.%: $(SDIR)/scheme.y
+$(SDIR)/parser.o: $(SDIR)/parser.y
 	bison --warnings=all --feature=all -d $^ -o $@
 
 # make obj directory

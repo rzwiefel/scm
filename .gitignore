@@ -1,6 +1,9 @@
 obj/
 .DS_Store
 scm*
-lex.yy.c
+lexer.h
+lexer.c
+parser.h
+parser.c
 *.dep
 tags

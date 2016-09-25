@@ -11,7 +11,7 @@
 
 %{
 #include "token.h"
-#include "scheme.tab.h"
+#include "parser.h"
 
 #define YY_DECL int yylex(void)
 #define ret_token(type) return make_token(type,yytext);
