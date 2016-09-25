@@ -24,11 +24,11 @@ $(BIN): $(ODIR) $(OBJS)
 $(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(SDIR)/lexer.o: $(SDIR)/lexer.l
+$(SDIR)/lexer.h $(SDIR)/lexer.c: $(SDIR)/lexer.l
 	flex --header-file=$(SDIR)/lexer.h --outfile=$(SDIR)/lexer.c $<
 
-$(SDIR)/parser.o: $(SDIR)/parser.y
-	bison --warnings=all --feature=all -d $^ -o $@
+$(SDIR)/parser.h $(SDIR)/parser.c: $(SDIR)/parser.y
+	bison --output-file=$(SDIR)/parser.c --defines=$(SDIR)/parser.h --warnings=all --feature=all $<
 
 # make obj directory
 $(ODIR):
@@ -36,7 +36,7 @@ $(ODIR):
 
 # clean up
 clean:
-	rm -rf $(ODIR)/*.o $(BIN) $(SDIR)/lex.yy.c
+	rm -rf $(ODIR)/*.o $(BIN) $(SDIR)/lexer.h $(SDIR)/lexer.c $(SDIR)/parser.h $(SDIR)/parser.c
 
 # code navigation tags
 tags: $(addprefix $(SDIR)/, $(SOURCES))

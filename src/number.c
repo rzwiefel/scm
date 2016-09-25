@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/*
 typedef struct number_t number_t;
 
 struct number_t { iobj_t *vtable; long value; };
@@ -21,9 +22,9 @@ static void number_mark(obj_t *o) {
 
 static void number_free(obj_t *o) {
   free(o);
-}
+}*/
 
-static obj_t *make_number(long value) {
+/*static obj_t *make_number(long value) {
   static iobj_t vtable = {
     0,
     number_equal,
@@ -37,8 +38,9 @@ static obj_t *make_number(long value) {
   num->value = value;
 
   return (obj_t*) num;
-}
+}*/
 
+/*
 defn(add) {
   return make_number(0);
 }
@@ -57,5 +59,5 @@ defn(divide) {
 
 defn(mod) {
   return make_number(0);
-}
+}*/
 

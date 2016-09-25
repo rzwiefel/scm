@@ -1,21 +1,12 @@
-%option bison-bridge
-%option bison-locations
-%option ecs
-%option nodefault
-%option noyywrap
-%option reentrant
-%option stack
-%option warn
-%option yylineno
-
-
 %{
 #include "token.h"
 #include "parser.h"
-
-#define YY_DECL int yylex(void)
-#define ret_token(type) return make_token(type,yytext);
 %}
+
+%option reentrant bison-bridge
+%option warn noyywrap nodefault
+%option nounput
+%option noinput
 
 FIXNUM 0|[1-9]{DIGIT}*
 FLONUM {FIXNUM}\.{DIGIT}+
@@ -46,12 +37,12 @@ BOOLEAN #t|#f
 ;.*
 ("\n"|"\t"|" ")+
 
-{FIXNUM}          { return FIXNUM_T; }
-{FLONUM}          { return FLONUM_T; }
-{STRING}          { return STRING_T; }
-{SYMBOL}          { return SYMBOL_T; }
-{CHARACTER}       { return CHARACTER_T; }
-{BOOLEAN}         { return BOOLEAN_T; }
+{FIXNUM}          { yylval->str = yytext; return FIXNUM_T; }
+{FLONUM}          { yylval->str = yytext; return FLONUM_T; }
+{STRING}          { yylval->str = yytext; return STRING_T; }
+{SYMBOL}          { yylval->str = yytext; return SYMBOL_T; }
+{CHARACTER}       { yylval->str = yytext; return CHARACTER_T; }
+{BOOLEAN}         { yylval->str = yytext; return BOOLEAN_T; }
 
 . { printf("token = %s\n", yytext); return *yytext; }
 

@@ -1,15 +1,16 @@
-%define parse.error verbose
-%define api.pure true
-%locations
-%token-table
-%glr-parser
-%lex-param {void *scanner}
-%parse-param {void *scanner}
-
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include "parser.h"
+#include "lexer.h"
+
+void yyerror(yyscan_t scanner, char const *msg);
 %}
+
+%define parse.error verbose
+%define api.pure true
+%lex-param {void *scanner}
+%parse-param {void *scanner}
 
 %union {
   char *str;
@@ -19,19 +20,49 @@
 
 %%
 
-EXPR : ATOM
-     | LIST
+exprs : %empty
+      | exprs expr
+      ;
+
+expr : map
+     | set
+     | vec
+     | list
+     | quote
+     | syntax_quote
+     | syntax_unquote
+     | atom
      ;
 
-LIST : '(' ITEM ')' { printf("list\n"); }
+map : '{' pairs '}' { printf("map\n"); }
+    ;
+
+pairs : %empty
+      | pairs pair
+      ;
+
+pair : expr expr
      ;
 
-ITEM : ITEM LIST
-     | ITEM ATOM
-     | %empty
+set : '#' '{' exprs '}' { printf("set\n"); }
+    ;
+
+vec : '[' exprs ']' { printf("vec\n"); }
+    ;
+
+list : '(' exprs ')' { printf("list\n"); }
      ;
 
-ATOM : BOOLEAN_T {printf("bool = %s\n", yylval.str);}
+quote : '\'' expr { printf("quote\n"); }
+      ;
+
+syntax_quote : '`' expr { printf("syntax quote\n"); }
+             ;
+
+syntax_unquote : ',' expr { printf("syntax unquote\n"); }
+               ;
+
+atom : BOOLEAN_T {printf("bool = %s\n", yylval.str);}
      | FIXNUM_T {printf("fixnum = %s\n", yylval.str);}
      | FLONUM_T { printf("flonum = %s\n", yylval.str); }
      | CHARACTER_T { printf("char = %s\n", yylval.str); }
@@ -41,26 +72,7 @@ ATOM : BOOLEAN_T {printf("bool = %s\n", yylval.str);}
 
 %%
 
-int
-yyerror(YYLTYPE *locp, char *msg) {
-  if (locp) {
-    fprintf(stderr, "parse error: %s (:%d.%d -> :%d.%d)\n",
-                    msg,
-                    locp->first_line, locp->first_column,
-                    locp->last_line,  locp->last_column
-    );
-    /* todo: add some fancy ^^^^^ error handling here */
-  } else {
-    fprintf(stderr, "parse error: %s\n", msg);
-  }
-  return (0);
+void yyerror(yyscan_t scanner, const char *msg) {
+  fprintf(stderr, "parse error: %s\n", msg);
 }
 
-int main (int argc, char** argv) {
-  /*int result;
-  yyscan_t scanner;
-  yylex_init(&scanner);
-  result = (yyparse(scanner));
-  yylex_destroy(scanner);
-  return (result);*/
-}
