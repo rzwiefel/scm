@@ -13,6 +13,9 @@ OBJS=$(addprefix $(ODIR)/, $(SOURCES:.c=.o))
 
 all: $(BIN)
 
+makefile.dep: $(addprefix $(SDIR)/, $(SOURCES))
+	$(CC) $^ -MM > $@
+
 # build interpreter
 $(BIN): $(ODIR) $(OBJS)
 	$(CC) $(OBJS) -o $(BIN)  $(LDFLAGS)
@@ -39,3 +42,7 @@ tags: $(addprefix $(SDIR)/, $(SOURCES))
 # build and run tests
 test: $(BIN)
 	./test/runner.sh ./$(BIN) ./test/suite
+
+ifneq ($(MAKECMDGOALS),clean)
+-include makefile.dep
+endif
