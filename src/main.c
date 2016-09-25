@@ -62,7 +62,7 @@ token_stream_t *prompt(char *str) {
 
 vm_t *vm = NULL;
 
-int main (int argc, char** argv) {
+int xmain (int argc, char** argv) {
 
   vm = make_vm();
 

@@ -6,7 +6,7 @@ ODIR=obj
 SDIR=src
 
 # find all source files
-SOURCES=$(shell cd $(SDIR) && ls *.c | grep -v lex.yy.c)  lex.yy.c
+SOURCES=$(shell cd $(SDIR) && ls *.c | grep -v lexer.c) lexer.c
 OBJS=$(addprefix $(ODIR)/, $(SOURCES:.c=.o))
 
 .PHONY: clean test
@@ -24,8 +24,11 @@ $(BIN): $(ODIR) $(OBJS)
 $(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(SDIR)/lex.yy.c: $(SDIR)/scheme.l
-	flex -t $< > $@
+$(SDIR)/lexer.%: $(SDIR)/scheme.l
+	flex --header-file=$(SDIR)/lexer.h --outfile=$(SDIR)/lexer.c $<
+
+$(SDIR)/parser.%: $(SDIR)/scheme.y
+	bison --warnings=all --feature=all -d $^ -o $@
 
 # make obj directory
 $(ODIR):

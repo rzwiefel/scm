@@ -1,7 +1,19 @@
+%option bison-bridge
+%option bison-locations
+%option ecs
+%option nodefault
+%option noyywrap
+%option reentrant
+%option stack
+%option warn
+%option yylineno
+
+
 %{
 #include "token.h"
-#define YY_DECL token_t *yylex(void)
+#include "scheme.tab.h"
 
+#define YY_DECL int yylex(void)
 #define ret_token(type) return make_token(type,yytext);
 %}
 
@@ -29,29 +41,18 @@ RBRACE \)
 
 BOOLEAN #t|#f
 
-%option noyywrap
-%option nounput
-%option noinput
-
 %%
 
-;.*               ret_token(IGNORE)
-("\n"|"\t"|" ")+  ret_token(IGNORE)
+;.*
+("\n"|"\t"|" ")+
 
-\'                ret_token(QUOTE)
+{FIXNUM}          { return FIXNUM_T; }
+{FLONUM}          { return FLONUM_T; }
+{STRING}          { return STRING_T; }
+{SYMBOL}          { return SYMBOL_T; }
+{CHARACTER}       { return CHARACTER_T; }
+{BOOLEAN}         { return BOOLEAN_T; }
 
-{FIXNUM}          ret_token(FIXNUM)
-{FLONUM}          ret_token(FLONUM)
-{STRING}          ret_token(STRING)
-{SYMBOL}          ret_token(SYMBOL)
-{CHARACTER}       ret_token(CHARACTER)
-{BOOLEAN}         ret_token(BOOLEAN)
-
-{LBRACE}          ret_token(LBRACE)
-{RBRACE}          ret_token(RBRACE)
-
-\.                ret_token(DOT)
-
-<<EOF>>           ret_token(ENDOFINPUT)
+. { printf("token = %s\n", yytext); return *yytext; }
 
 %%
