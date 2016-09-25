@@ -51,13 +51,26 @@ object_t *eval_plus(object_t *expr, object_t **env) {
   return plus(op, eval_plus(cdr(expr), env));
 }
 
+object_t *eval_list_iter(object_t *pair, object_t **env) {
+  if (pair == NULL) return NULL;
+  return cons(eval(car(pair), env), eval_list_iter(cdr(pair), env));
+}
+
+object_t *eval_list(object_t *expr, object_t **env) {
+  return eval_list_iter(expr, env);
+}
+
 object_t *eval_args(object_t *frame, object_t *params, object_t *args, bool_t macro, object_t **env) {
   if (args == NULL || params == NULL) return frame;
 
-  object_t *sym = car(params);
-  object_t *val = macro ? car(args) : eval(car(args), env);
+  if (true(symbol(params))) {
+    return define(frame, params, eval_list(args, env));
+  } else {
+    object_t *sym = car(params);
+    object_t *val = macro ? car(args) : eval(car(args), env);
 
-  return define(eval_args(frame, cdr(params), cdr(args), macro, env), sym, val);
+    return define(eval_args(frame, cdr(params), cdr(args), macro, env), sym, val);
+  }
 }
 
 object_t *eval_procedure(object_t *procedure, object_t *args, bool_t macro, object_t **env) {
