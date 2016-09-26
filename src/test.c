@@ -1,6 +1,7 @@
 #include "vm.h"
-#include "object.h"
+#include "types.h"
 #include "print.h"
+#include "eval.h"
 
 #include "parser.h"
 #include "lexer.h"

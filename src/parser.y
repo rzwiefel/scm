@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "object.h"
+#include "types.h"
 
 #include "parser.h"
 #include "lexer.h"

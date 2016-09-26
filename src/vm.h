@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#include "object.h"
+#include "types.h"
 
 typedef struct vm_t vm_t;
 

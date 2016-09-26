@@ -1,7 +1,7 @@
 #ifndef ENV_H
 #define ENV_H
 
-#include "object.h"
+#include "types.h"
 
 extern object_t *globals;
 

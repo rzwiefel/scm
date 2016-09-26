@@ -76,12 +76,6 @@ void free_object(object_t *o);
 
 object_t *str_to_error(string_t *str);
 
-object_t *cons(object_t *car, object_t *cdr);
-object_t *car(object_t *pair);
-object_t *cdr(object_t *pair);
-void set_car(object_t *pair, object_t *car);
-void set_cdr(object_t *pair, object_t *cdr);
-
 #define predicate(fun,TYPE) \
   object_t *fun(object_t *o) { \
     if (o == NULL || o->type != TYPE) { \
