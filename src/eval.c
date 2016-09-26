@@ -166,6 +166,7 @@ object_t *eval_error(object_t *expr, object_t **env) {
   object_t *msg = eval(car(cdr(expr)), env);
   if (msg->type != STRING) return make_error("whaaat!!!");
   return str_to_error(msg->data.ptr);
+  return NULL;
 }
 
 #define eval_predicate(fn,p) \

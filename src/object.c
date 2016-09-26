@@ -4,31 +4,6 @@
 #include "vm.h"
 #include "object.h"
 
-char *type_to_str[] = {
-  NULL,
-  "LBRACE",
-  "RBRACE",
-  "FIXNUM",
-  "FLONUM",
-  "STRING",
-  "CHARACTER",
-  "SYMBOL",
-  "BOOLEAN",
-  "DOT",
-  "PAIR",
-  "VECTOR",
-  "QUOTE",
-  "PRIMITIVE",
-  "PROCEDURE",
-  "IGNORE",
-  "ERROR",
-  "ENDOFINPUT"
-};
-
-
-object_t t = { BOOLEAN, { .c = 't' } };
-object_t f = { BOOLEAN, { .c = 'f' } };
-
 extern vm_t *vm;
 
 object_t *make(type_t type) {
@@ -58,18 +33,6 @@ static void free_str(void *ptr) {
   free(s);
 }
 
-object_t *make_fixnum(char *str) {
-  object_t *o = make(FIXNUM);
-  o->data.fix = atoi(str);
-  return o;
-}
-
-object_t *make_fixnum_int(int fix) {
-  object_t *o = make(FIXNUM);
-  o->data.fix = fix;
-  return o;
-}
-
 object_t *make_flonum(char *str) {
   object_t *o = make(FLONUM);
   o->data.flo = atof(str);
@@ -82,31 +45,10 @@ object_t *make_flonum_float(float flo) {
   return o;
 }
 
-object_t *make_string(char *str) {
-  object_t *o = make(STRING);
-  o->data.ptr = make_str(str);
-  return o;
-}
-
 object_t *make_char(char *str) {
   object_t *o = make(CHARACTER);
   o->data.c = *(str + 2);
   return o;
-}
-
-object_t *make_symbol(char *str) {
-  object_t *o = make(SYMBOL);
-  o->data.ptr = make_str(str);
-  return o;
-}
-
-
-object_t *make_boolean(char *str) {
-  if (strcmp(str, "#t") == 0) {
-    return &t;
-  } else {
-    return &f;
-  }
 }
 
 object_t *make_primitive(primitive fn) {
@@ -135,38 +77,13 @@ void free_object(object_t *o) {
   free(o);
 }
 
-object_t *str_to_error(string_t *str) {
-  object_t *o = make(ERROR);
-  o->data.ptr = make_str(str->str);
-  return o;
-}
-
 object_t *make_error (char *str) {
   object_t *o = make(ERROR);
   o->data.ptr = make_str(str);
   return o;
 }
 
-object_t *number(object_t *o) {
-  if (o == NULL || (o->type != FIXNUM && o->type != FLONUM)) {
-    return &f;
-  }
-  return &t;
-}
-
-object_t *null(object_t *o) {
-  if (o == NULL) return &t;
-  return &f;
-}
-
-predicate(boolean, BOOLEAN)
-predicate(fixnum, FIXNUM)
-predicate(flonum, FLONUM)
-predicate(pair, PAIR)
 predicate(character, CHARACTER)
-predicate(string, STRING)
-predicate(symbol, SYMBOL)
-predicate(variable, SYMBOL)
 predicate(procedure, PROCEDURE)
 predicate(error, ERROR)
 

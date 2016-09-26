@@ -1,5 +1,10 @@
 #include "pair.h"
 
+typedef struct {
+  object_t *car;
+  object_t *cdr;
+} pair_t;
+
 object_t *cons(object_t *car, object_t *cdr) {
   object_t *o = make(PAIR);
   pair_t *p = malloc(sizeof(pair_t));
@@ -34,4 +39,11 @@ void set_car(object_t *pair, object_t *car) {
 void set_cdr(object_t *pair, object_t *cdr) {
   ((pair_t*) pair->data.ptr)->cdr = cdr;
 }
+
+object_t *null(object_t *o) {
+  if (o == NULL) return &t;
+  return &f;
+}
+
+predicate(pair, PAIR)
 
