@@ -3,8 +3,6 @@
 
 #include "types.h"
 
-extern object_t *globals;
-
 object_t *make_frame(object_t *parent);
 
 object_t *define(object_t *env, object_t *sym, object_t *val);
