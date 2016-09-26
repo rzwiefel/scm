@@ -1,4 +1,5 @@
 #include "pair.h"
+#include "error.h"
 
 typedef struct {
   object_t *car;
