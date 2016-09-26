@@ -60,11 +60,11 @@ token_stream_t *prompt(char *str) {
   return prompt_validate(str, NULL, NULL);
 }
 
-vm_t *vm = NULL;
+//vm_t *vm = NULL;
 
 int xmain (int argc, char** argv) {
 
-  vm = make_vm();
+  vm_t *vm = make_vm();
 
   vm_set_root_env(vm, init());
   token_stream_t *ts = NULL;

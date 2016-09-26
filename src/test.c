@@ -1,5 +1,11 @@
+#include "vm.h"
+#include "object.h"
+#include "print.h"
+
 #include "parser.h"
 #include "lexer.h"
+
+vm_t *vm = NULL;
 
 int main (int argc, char** argv) {
   yyscan_t scanner;
@@ -7,7 +13,23 @@ int main (int argc, char** argv) {
   yylex_init(&scanner);
   yyset_in(stdin, scanner);
 
-  yyparse(scanner);
+  vm = make_vm();
+  vm_set_root_env(vm, init());
+  object_t *expr = NULL;
+
+  while (yyparse(scanner, &expr) == 0 && expr != -1) {
+    object_t *value = eval(expr, vm_root_env(vm));
+
+    if (isatty(STDIN_FILENO)) {
+      printf(";=> ");
+      print(value);
+      printf("\n");
+    }
+
+    vm_gc(vm);
+  }
+
+
 
   yylex_destroy(scanner);
 

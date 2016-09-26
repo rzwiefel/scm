@@ -1,6 +1,7 @@
 obj/
 .DS_Store
 scm*
+vgcore.*
 lexer.h
 lexer.c
 parser.h

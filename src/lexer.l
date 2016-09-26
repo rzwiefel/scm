@@ -1,5 +1,6 @@
 %{
-#include "token.h"
+#include "object.h"
+
 #include "parser.h"
 %}
 
@@ -44,6 +45,6 @@ BOOLEAN #t|#f
 {CHARACTER}       { yylval->str = yytext; return CHARACTER_T; }
 {BOOLEAN}         { yylval->str = yytext; return BOOLEAN_T; }
 
-. { printf("token = %s\n", yytext); return *yytext; }
+. { return *yytext; }
 
 %%

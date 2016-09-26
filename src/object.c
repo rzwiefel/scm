@@ -29,7 +29,6 @@ char *type_to_str[] = {
 object_t t = { BOOLEAN, { .c = 't' } };
 object_t f = { BOOLEAN, { .c = 'f' } };
 
-
 extern vm_t *vm;
 
 object_t *make(type_t type) {
