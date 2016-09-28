@@ -4,7 +4,7 @@
 #include "colors.h"
 
 static char *get_str(object_t *o) {
-  return ((string_t*) o->data.ptr)->str;
+  return &object_data(o, char);
 }
 
 static void print_object(object_t *o);
@@ -37,13 +37,13 @@ static void print_object(object_t *o) {
   } else {
     switch (o->type) {
       case FIXNUM:
-        printf(__green("%d"), o->data.fix);
+        printf(__green("%d"), object_data(o, int));
         break;
       case FLONUM:
-        printf(__green("%f"), o->data.flo);
+        printf(__green("%f"), object_data(o, float));
         break;
       case CHARACTER:
-        printf(__yellow("#\\%c"), o->data.c);
+        printf(__yellow("#\\%c"), object_data(o, char));
         break;
       case STRING:
         printf(__yellow("%s"), get_str(o));
@@ -65,9 +65,6 @@ static void print_object(object_t *o) {
         break;
       case PRIMITIVE:
         printf(__purple("#<PRIMITIVE@%p>"), (void*) o);
-        break;
-      case MACRO:
-        printf(__purple("#<MACRO@%p>"), (void*) o);
         break;
       case ERROR:
         printf(__red("#<ERROR:%s>"), get_str(o));

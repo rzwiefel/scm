@@ -10,6 +10,7 @@
 #include "number.h"
 #include "pair.h"
 #include "error.h"
+#include "primitive.h"
 #include "procedure.h"
 #include "port.h"
 

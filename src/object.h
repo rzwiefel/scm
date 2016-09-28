@@ -12,37 +12,33 @@ typedef enum {
   TRUE,
   FALSE,
   PAIR,
-  VECTOR,
   QUOTE,
   PRIMITIVE,
   PROCEDURE,
-  MACRO,
   ERROR,
   ENDOFINPUT
 } type_t;
 
 typedef struct object_t object_t;
-typedef struct object_t *(*primitive)(object_t *expr, object_t **env);
 
 extern object_t t;
 extern object_t f;
+
+#define true(o) ((o) == &t)
+#define false(o) ((o) == &f)
 
 struct object_t {
   unsigned char type;
   unsigned char trace;
   unsigned char marked;
   unsigned char padding;
-  union {
-    void *ptr;
-    char c;
-    int fix;
-    float flo;
-    primitive fn;
-  } data;
 };
 
-object_t *make(type_t type);
+object_t *make(type_t type, size_t n);
+object_t *object_eq(object_t *a, object_t *b);
 void free_object(object_t *o);
+
+#define object_data(o,type) (*((type*)(((char*)o) + sizeof(object_t))))
 
 #define predicate(fun,TYPE) \
   object_t *fun(object_t *o) { \

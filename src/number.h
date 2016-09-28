@@ -12,5 +12,9 @@ object_t *fixnum(object_t *o);
 object_t *flonum(object_t *o);
 object_t *number(object_t *o);
 
+
+object_t *plus(object_t *a, object_t *b);
+object_t *number_eq(object_t *a, object_t *b);
+
 #endif
 
