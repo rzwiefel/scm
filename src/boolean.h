@@ -3,6 +3,9 @@
 
 #include "object.h"
 
+extern object_t t;
+extern object_t f;
+
 #define true(o) ((o) == &t)
 #define false(o) ((o) == &f)
 

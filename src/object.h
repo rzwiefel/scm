@@ -4,29 +4,25 @@
 #include <stdlib.h>
 
 typedef enum {
-  LBRACE = 1,
-  RBRACE,
-  FIXNUM,
+  FIXNUM = 1,
   FLONUM,
   STRING,
   CHARACTER,
   SYMBOL,
   TRUE,
   FALSE,
-  DOT,
   PAIR,
   VECTOR,
   QUOTE,
   PRIMITIVE,
   PROCEDURE,
   MACRO,
-  IGNORE,
   ERROR,
   ENDOFINPUT
 } type_t;
 
 typedef struct object_t object_t;
-typedef struct object_t *(*primitive)(struct object_t *expr, struct object_t **env);
+typedef struct object_t *(*primitive)(object_t *expr, object_t **env);
 
 struct object_t {
   unsigned char type;
@@ -41,9 +37,6 @@ struct object_t {
     primitive fn;
   } data;
 };
-
-extern object_t t;
-extern object_t f;
 
 object_t *make(type_t type);
 void free_object(object_t *o);

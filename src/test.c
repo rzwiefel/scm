@@ -30,8 +30,6 @@ int main (int argc, char** argv) {
     vm_gc(vm);
   }
 
-
-
   yylex_destroy(scanner);
 
   return 0;
