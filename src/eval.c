@@ -138,7 +138,8 @@ object_t *eval(object_t *expr, object_t **env) {
     case FLONUM:
     case CHARACTER:
     case STRING:
-    case BOOLEAN:
+    case TRUE:
+    case FALSE:
     case ERROR:
     case PRIMITIVE:
     case PROCEDURE:

@@ -48,8 +48,11 @@ static void print_object(object_t *o) {
       case STRING:
         printf(__yellow("%s"), get_str(o));
         break;
-      case BOOLEAN:
-        printf(__green("#%c"), o->data.c);
+      case TRUE:
+        printf(__green("#t"));
+        break;
+      case FALSE:
+        printf(__green("#f"));
         break;
       case PAIR:
         print_pair(o);

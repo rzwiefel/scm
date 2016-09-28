@@ -43,7 +43,8 @@ object_t *read_object(token_t *t) {
     case STRING: return make_string(str);
     case CHARACTER: return make_char(str);
     case SYMBOL: return make_symbol(str);
-    case BOOLEAN: return make_boolean(str);
+    case TRUE:
+    case FALSE: return make_boolean(str);
     default: return NULL;
   }
 }

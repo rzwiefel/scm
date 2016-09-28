@@ -11,7 +11,8 @@ typedef enum {
   STRING,
   CHARACTER,
   SYMBOL,
-  BOOLEAN,
+  TRUE,
+  FALSE,
   DOT,
   PAIR,
   VECTOR,
@@ -28,7 +29,10 @@ typedef struct object_t object_t;
 typedef struct object_t *(*primitive)(struct object_t *expr, struct object_t **env);
 
 struct object_t {
-  char type;
+  unsigned char type;
+  unsigned char trace;
+  unsigned char marked;
+  unsigned char padding;
   union {
     void *ptr;
     char c;
@@ -36,8 +40,6 @@ struct object_t {
     float flo;
     primitive fn;
   } data;
-  unsigned char trace;
-  unsigned char marked;
 };
 
 extern object_t t;
