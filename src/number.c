@@ -52,6 +52,8 @@ predicate(fixnum, FIXNUM)
 predicate(flonum, FLONUM)
 
 object_t *number_eq(object_t *a, object_t *b) {
-  return &f;
+  if (a == NULL || b == NULL) return &f;
+  if (a->type != FIXNUM || b->type != FIXNUM) return &f;
+  return (object_data(a, int) == object_data(b, int)) ? &t : &f;
 }
 
