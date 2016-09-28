@@ -30,7 +30,7 @@ void yyerror(yyscan_t scanner, object_t **obj, char const *msg);
 
 %%
 
-form : %empty { *obj = -1; YYACCEPT; }
+form : %empty { *obj = &eof; YYACCEPT; }
      | expr { *obj = $1; YYACCEPT; }
      ;
 

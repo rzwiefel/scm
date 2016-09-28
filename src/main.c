@@ -18,7 +18,7 @@ int main (int argc, char** argv) {
   vm_set_root_env(vm, init());
   object_t *expr = NULL;
 
-  while (yyparse(scanner, &expr) == 0 && expr != -1) {
+  while (yyparse(scanner, &expr) == 0 && expr != &eof) {
     object_t *value = eval(expr, vm_root_env(vm));
 
     if (isatty(STDIN_FILENO)) {

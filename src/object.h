@@ -24,6 +24,9 @@ typedef enum {
 typedef struct object_t object_t;
 typedef struct object_t *(*primitive)(object_t *expr, object_t **env);
 
+extern object_t t;
+extern object_t f;
+
 struct object_t {
   unsigned char type;
   unsigned char trace;
