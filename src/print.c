@@ -72,6 +72,9 @@ static void print_object(object_t *o) {
       case ERROR:
         printf(__red("#<ERROR:%s>"), get_str(o));
         break;
+      case PORT:
+        print_port(o);
+        break;
       default:
         printf("cannot write unknown type");
     }

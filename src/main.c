@@ -2,6 +2,7 @@
 #include "types.h"
 #include "print.h"
 #include "eval.h"
+#include "read.h"
 
 #include "parser.h"
 #include "lexer.h"
@@ -19,6 +20,8 @@ int main (int argc, char** argv) {
   object_t *env = make_frame(NULL);
   init(env);
   define_vector(env);
+  define_port(env);
+  define_read(env);
   vm_set_root_env(vm, env);
   object_t *expr = NULL;
 

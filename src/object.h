@@ -17,6 +17,7 @@ typedef enum {
   PRIMITIVE,
   PROCEDURE,
   ERROR,
+  PORT,
   ENDOFINPUT
 } type_t;
 
