@@ -9,7 +9,7 @@ SDIR=src
 SOURCES=$(shell cd $(SDIR) && ls *.c | egrep -v "lexer.c|parser.c") lexer.c parser.c
 OBJS=$(addprefix $(ODIR)/, $(SOURCES:.c=.o))
 
-.PHONY: clean test
+.PHONY: clean test repl
 
 all: $(BIN)
 
@@ -37,6 +37,10 @@ $(ODIR):
 # clean up
 clean:
 	rm -rf $(ODIR)/*.o $(BIN) $(SDIR)/lexer.h $(SDIR)/lexer.c $(SDIR)/parser.h $(SDIR)/parser.c
+
+repl: $(BIN)
+	@echo "Welcome to scm!"
+	@rlwrap ./$(BIN)
 
 # code navigation tags
 tags: $(addprefix $(SDIR)/, $(SOURCES))
