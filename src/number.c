@@ -48,6 +48,22 @@ object_t *plus(object_t *a, object_t *b) {
   return make_fixnum_int(object_data(a, int) + object_data(b, int));
 }
 
+object_t *multiply(object_t *a, object_t *b) {
+  if (a == NULL) return plus(make_fixnum_int(1), b);
+  if (b == NULL) return plus(a, make_fixnum_int(1));
+
+  if (!true(number(a)) || !true(number(b)))
+    return make_error("can't perform arithmetic on non numeric values");
+
+  if (a->type == FLONUM || b->type == FLONUM) {
+    if (a->type != FLONUM) return make_flonum_float(object_data(a, int) * object_data(b, float));
+    if (b->type != FLONUM) return make_flonum_float(object_data(a, float) * object_data(b, int));
+    return make_flonum_float(object_data(a, float) * object_data(b, float));
+  }
+
+  return make_fixnum_int(object_data(a, int) * object_data(b, int));
+}
+
 predicate(fixnum, FIXNUM)
 predicate(flonum, FLONUM)
 

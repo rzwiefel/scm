@@ -210,6 +210,13 @@ object_t *eval_plus(object_t *expr, object_t **env) {
   return plus(op, eval_plus(cdr(expr), env));
 }
 
+object_t *eval_multiply(object_t *expr, object_t **env) {
+  if (expr == NULL) return NULL;
+  object_t *op = eval(car(cdr(expr)), env);
+  if (true(error(op))) return op;
+  return multiply(op, eval_multiply(cdr(expr), env));
+}
+
 
 #define def(sym,fun) \
   define(env, make_symbol(sym), make_primitive(fun));
@@ -218,6 +225,7 @@ object_t *init() {
   object_t *env = make_frame(NULL);
 
   def("+", eval_plus)
+  def("*", eval_multiply)
   def("=", eval_eq)
   def("if", eval_if)
   def("quote", eval_quote)
