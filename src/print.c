@@ -46,7 +46,7 @@ static void print_object(object_t *o) {
         printf(__yellow("#\\%c"), object_data(o, char));
         break;
       case STRING:
-        printf(__yellow("%s"), get_str(o));
+        printf(__yellow("\"%s\""), get_str(o));
         break;
       case TRUE:
         printf(__green("#t"));
