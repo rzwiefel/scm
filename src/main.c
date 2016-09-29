@@ -26,7 +26,7 @@ int main (int argc, char** argv) {
   object_t *expr = NULL;
 
   if (isatty(STDIN_FILENO)) {
-    printf(">> ");
+    printf("> ");
   }
 
   while (yyparse(scanner, &expr) == 0 && expr != &eof) {
@@ -34,7 +34,7 @@ int main (int argc, char** argv) {
 
     if (isatty(STDIN_FILENO)) {
       print(value);
-      printf("\n>> ");
+      printf("\n> ");
     }
 
     vm_gc(vm);
