@@ -52,14 +52,6 @@ object_t *vector_length(object_t *o) {
   return make_fixnum_int(vector->length);
 }
 
-/*object_t *vector_get(object_t *o, object_t *i) {
-  vector_t *vector = vector_data(o);
-
-  if (i >= vector->length) return NULL;
-
-  return vector->data[i];
-}*/
-
 static object_t *vector_get_internal(vector_t *vector, size_t i) {
   if (i >= vector->length) return NULL;
   return vector->data[i];
@@ -95,7 +87,34 @@ defn(eval_vector) {
   return o;
 }
 
+defn(eval_vector_length) {
+  object_t *v = eval(car(cdr(expr)), env);
+  if (v == NULL || v->type != VECTOR)
+    return make_error("First argument is not a vector.");
+  return vector_length(v);
+}
+
+defn(eval_vector_ref) {
+  object_t *v = eval(car(cdr(expr)), env);
+  if (v == NULL || v->type != VECTOR)
+    return make_error("First argument is not a vector.");
+
+  object_t *i = eval(car(cdr(cdr(expr))), env);
+  if (false(fixnum(i)))
+    return make_error("Second argument is not an integer.");
+
+  int j = fixnum_int(i);
+  vector_t *vector = vector_data(v);
+
+  if (j < 0 || j >= vector->length)
+    return make_error("Index is out of bounds.");
+
+  return vector->data[j];
+}
+
 void define_vector(object_t *env) {
   def("vector?", vector)
   def("vector", eval_vector)
+  def("vector-length", eval_vector_length)
+  def("vector-ref", eval_vector_ref)
 }

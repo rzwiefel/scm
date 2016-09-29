@@ -25,6 +25,10 @@ object_t *make_flonum_float(float flo) {
   return o;
 }
 
+int fixnum_int(object_t *o) {
+  return object_data(o, int);
+}
+
 object_t *number(object_t *o) {
   if (o == NULL || (o->type != FIXNUM && o->type != FLONUM)) {
     return &f;
