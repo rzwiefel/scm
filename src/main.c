@@ -15,18 +15,26 @@ int main (int argc, char** argv) {
   yyset_in(stdin, scanner);
 
   vm = make_vm();
-  vm_set_root_env(vm, init());
+
+  object_t *env = make_frame(NULL);
+  init(env);
+  define_vector(env);
+  vm_set_root_env(vm, env);
   object_t *expr = NULL;
+
+  if (isatty(STDIN_FILENO)) {
+    printf(">> ");
+  }
 
   while (yyparse(scanner, &expr) == 0 && expr != &eof) {
     object_t *value = eval(expr, vm_root_env(vm));
 
     if (isatty(STDIN_FILENO)) {
-      printf(";=> ");
       print(value);
       printf("\n");
     }
 
+    printf(">> ");
     vm_gc(vm);
   }
 

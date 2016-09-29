@@ -28,7 +28,6 @@ void yyerror(yyscan_t scanner, object_t **obj, char const *msg);
 %type <obj> expr
 %type <obj> quote
 %type <obj> vector
-%type <obj> elements
 
 %%
 
@@ -46,20 +45,16 @@ list : '(' exprs ')' { $$ = $2; }
      | '(' ')' { $$ = NULL; }
      ;
 
+vector : '[' exprs ']' { $$ = cons(make_symbol("vector"), $2); }
+       | '[' ']' { $$ = cons(make_symbol("vector"), NULL); }
+       ;
+
 exprs : %empty { $$ = NULL; }
       | expr exprs { $$ = cons($1, $2); }
       ;
 
 quote : '\'' expr { $$ = cons(make_symbol("quote"), cons($2, NULL)); }
       ;
-
-vector : '[' elements ']' { $$ = $2; }
-       | '[' ']' { $$ = make_vector(); }
-       ;
-
-elements : %empty { $$ = make_vector(); }
-         | elements expr { $$ = vector_push($1, $2); }
-         ;
 
 atom : BOOLEAN_T    { $$ = make_boolean(yylval.str); }
      | FIXNUM_T     { $$ = make_fixnum(yylval.str);  }

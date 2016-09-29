@@ -4,6 +4,10 @@
 #include "print.h"
 #include "vector.h"
 #include "number.h"
+#include "symbol.h"
+#include "boolean.h"
+#include "env.h"
+#include "eval.h"
 
 #define INITIAL_CAPACITY 64
 #define GROWTH_RATE 1.5
@@ -71,4 +75,27 @@ void print_vector(object_t *o) {
     }
   }
   printf("]");
+}
+
+defn(vector) {
+  object_t *arg = eval(car(cdr(expr)), env);
+  if (arg == NULL || arg->type != VECTOR) return &f;
+  return &t;
+}
+
+defn(eval_vector) {
+  object_t *o = make_vector();
+  object_t *args = cdr(expr);
+
+  while (args != NULL) {
+    vector_push(o, eval(car(args), env));
+    args = cdr(args);
+  }
+
+  return o;
+}
+
+void define_vector(object_t *env) {
+  def("vector?", vector)
+  def("vector", eval_vector)
 }

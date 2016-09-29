@@ -203,13 +203,7 @@ object_t *eval_multiply(object_t *expr, object_t **env) {
   return multiply(op, eval_multiply(cdr(expr), env));
 }
 
-
-#define def(sym,fun) \
-  define(env, make_symbol(sym), make_primitive(fun));
-
-object_t *init() {
-  object_t *env = make_frame(NULL);
-
+void init(object_t *env) {
   def("+", eval_plus)
   def("*", eval_multiply)
   def("=", eval_eq)
@@ -239,7 +233,5 @@ object_t *init() {
 
   def("write", eval_print)
   def("env", eval_env)
-
-  return env;
 }
 
