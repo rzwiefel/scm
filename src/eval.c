@@ -62,30 +62,16 @@ object_t *eval_quote(object_t *expr, object_t **env) {
 }
 
 object_t *eval(object_t *expr, object_t **env) {
-
   if (expr == NULL) return NULL;
 
   switch (expr->type) {
-    case FIXNUM:
-    case FLONUM:
-    case CHARACTER:
-    case STRING:
-    case TRUE:
-    case FALSE:
-    case ERROR:
-    case PRIMITIVE:
-    case PROCEDURE:
-      return expr;
-
-    case SYMBOL: {
-      return lookup(*env, expr);;
-    }
-
+    case SYMBOL:
+      return lookup(*env, expr);
     case PAIR:
       return eval_pair(expr, env);
+    default:
+      return expr;
   }
-
-  return make_error("unknown expression type");
 }
 
 object_t *eval_define(object_t *expr, object_t **env) {

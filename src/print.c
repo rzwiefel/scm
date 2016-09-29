@@ -57,6 +57,9 @@ static void print_object(object_t *o) {
       case PAIR:
         print_pair(o);
         break;
+      case VECTOR:
+        print_vector(o);
+        break;
       case SYMBOL:
         printf(__blue("%s"), get_str(o));
         break;
