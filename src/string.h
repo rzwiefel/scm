@@ -9,6 +9,7 @@ typedef struct {
 } string_t;
 
 object_t *make_string(char *str);
+char *string_cstr(object_t *o);
 object_t *str_to_error(string_t *str);
 
 object_t *string(object_t *o);
