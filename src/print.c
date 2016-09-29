@@ -64,13 +64,13 @@ static void print_object(object_t *o) {
         printf(__blue("%s"), get_str(o));
         break;
       case PROCEDURE:
-        printf(__purple("#<PROCEDURE@%p>"), (void*) o);
+        printf(__purple("#<procedure@%p>"), (void*) o);
         break;
       case PRIMITIVE:
-        printf(__purple("#<PRIMITIVE@%p>"), (void*) o);
+        printf(__purple("#<primitive@%p>"), (void*) o);
         break;
       case ERROR:
-        printf(__red("#<ERROR:%s>"), get_str(o));
+        printf(__red("#<error:%s>"), get_str(o));
         break;
       case PORT:
         print_port(o);
