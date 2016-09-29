@@ -31,10 +31,9 @@ int main (int argc, char** argv) {
 
     if (isatty(STDIN_FILENO)) {
       print(value);
-      printf("\n");
+      printf("\n>> ");
     }
 
-    printf(">> ");
     vm_gc(vm);
   }
 
