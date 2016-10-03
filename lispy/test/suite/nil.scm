@@ -1,0 +1,2 @@
+(write (null? '()))
+(write '())
