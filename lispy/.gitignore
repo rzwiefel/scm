@@ -4,6 +4,7 @@
 *.0
 *.so
 *.iml
+.idea/
 
 .DS_Store
 .DS_Store?

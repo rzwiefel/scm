@@ -2,35 +2,43 @@ import ast
 
 from util import PeekableGen, Symbol, Char
 
+START_DELIM = ('(', '[')
+END_DELIM = (')', ']')
 WHITE = (' ', '\n', '\t')
-DELIM = (')', None) + WHITE
-
+DELIM = (None,) + WHITE + END_DELIM
 
 def parse(s):
     return tokenize(PeekableGen(s.strip()))
 
 
 def tokenize(stream):
-    if stream.peek() == '(':
+    if stream.peek() in START_DELIM:
         return read_list(stream)
     else:
         return read_symbol(stream)
 
 
 def read_list(stream):
-    next(stream)
     l = []
+    first = next(stream)
     peek = stream.peek()
-    while peek != ')':
-        if peek == '(':
+    while peek not in END_DELIM:
+        if peek in START_DELIM:
             l.append(read_list(stream))
         elif peek == ' ':
             next(stream)
         else:
             l.append(read_symbol(stream))
         peek = stream.peek()
-    next(stream)
-    return l
+    last = next(stream)
+
+    if first == '(':
+        assert last == ')'
+        return tuple(l)
+    if first == '[':
+        assert last == ']'
+        return l
+
 
 
 def read_symbol(stream, delim=DELIM):
@@ -39,7 +47,7 @@ def read_symbol(stream, delim=DELIM):
     peek = stream.peek()
     escape_check = lambda: True
     if symbol[0] == '\'':
-        return ['quote', tokenize(stream)]
+        return ('quote', tokenize(stream))
 
     if symbol[0] == '"':
         delim = ('"',)

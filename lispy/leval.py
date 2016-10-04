@@ -65,8 +65,10 @@ def standard_env():
         'max': max,
         'min': min,
         'not': op.not_,
-        'null?': lambda x: x == [],
+        'null?': lambda x: len(x) == 0,
         'number?': lambda x: isinstance(x, int),  # TODO (RCZ) - not right yet
+        'open': open,
+        'read-file': lambda x: x.read(),
         'pair?': lambda x: isinstance(x, Pair),
         'pprint': pprint,
         'print': lambda *x: print(get_data(*x)),
@@ -77,6 +79,9 @@ def standard_env():
         'sum': lambda *x: sum(x),
         'symbol?': lambda x: isinstance(x, Symbol),
         'type': type,
+        'tuple': lambda x: tuple(x),
+        'vector': lambda *x: list(x),
+        'vector?': lambda x: env.get('list?')(x),
         'write': lambda *x: env.get('print')(*x)
     })
     return env
@@ -87,17 +92,20 @@ global_environment = standard_env()
 
 def leval(x, env=global_environment):
     if isinstance(x, Symbol):
-        return env.find(x)[x]
+        res = env.find(x)
+        return res[x] if res is not None else None
     if isinstance(x, str):
         return x
-    elif not isinstance(x, list):
+    elif isinstance(x, list):
+        return [leval(exp, env) for exp in x]
+    elif not isinstance(x, tuple):
         return x
     elif x[0] == 'quote':
         (_, exp) = x
         return exp
     elif x[0] == 'if':  # (if test conseq alt)
         if len(x) == 3:
-            x += [noop]  # todo (rcz) - this could be faster
+            x += (noop,)  # todo (rcz) - this could be faster
         (_, test, conseq, alt) = x
         exp = (conseq if leval(test, env) else alt)
         return leval(exp, env)

@@ -9,7 +9,7 @@ class Env(dict):
         elif self.outer is not None:
             return self.outer.find(var)
         else:
-            raise LookupError("Could not find symbol '%s'" % var)
+            return None
 
     def __get_innerds(self):
         innerds = [i for i in self]

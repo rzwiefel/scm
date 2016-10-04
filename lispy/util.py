@@ -32,14 +32,14 @@ def compose(*funcs):
 def get_data(x):
     if x is None:
         return 'nil'
-    elif isinstance(x, tuple) or isinstance(x, list):
+    elif isinstance(x, tuple):
         if len(x) == 0:
             return 'nil'
         if len(x) == 1:
             return str(get_data(x[0]))
         return '(%s)' % ' '.join(map(str, map(get_data, x)))
-    # elif isinstance(x, list):
-    #     return '[%s]' % ' '.join(map(str, map(get_data, x)))
+    elif isinstance(x, list):
+        return '[%s]' % ' '.join(map(str, map(get_data, x)))
     elif isinstance(x, bool):
         return '#t' if x else '#f'
     elif isinstance(x, str) and not isinstance(x, Char) and not isinstance(x, Symbol):
