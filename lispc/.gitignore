@@ -1,0 +1,9 @@
+obj/
+scm*
+vgcore.*
+lexer.h
+lexer.c
+parser.h
+parser.c
+*.dep
+tags
